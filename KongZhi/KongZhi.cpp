@@ -1,13 +1,12 @@
 /*TODO
-1.把录制文件保存
-2.开机自动运行，然后做一个登陆框，不登陆就不能对电脑进行操作。
+1.开机自动运行，然后做一个登陆框，不登陆就不能对电脑进行操作。
 */
 
 #include <windows.h>
 #include <stdio.h>
 
-#define SLEEPTIME 10
-#define SAVEFILE "C:\\1.exe"
+#define SLEEPTIME 10   //每次睡眠的时间
+#define SAVEFILE "a.exe"  //保存的文件名,默认保存到当前路径下,文件名可以固定，保存后在进行改名
 
 LPCTSTR m_strTitle1="Screen2Exe v1.2";//第一个窗口的标题
 LPCTSTR m_strTitle2="Screen2Exe";//第二个窗口的标题
@@ -70,24 +69,31 @@ HWND FindWindowAndSleep(LPCTSTR title) {
   return hwnd;
 }
 
+void SaveFile(HWND hwnd, LPCSTR keys)
+{
+    AttachThreadInput(::GetCurrentThreadId(),
+        ::GetWindowThreadProcessId(hwnd,NULL),  //自己的线程ID
+        TRUE);
+    HWND hedit1 = FindWindowEx(hwnd, NULL, "Edit", NULL);
+    HWND hedit2 = FindWindowEx(hwnd, hedit1, "Edit", NULL);
+    HWND hedit3 = FindWindowEx(hwnd, hedit2, "Edit", NULL);
+    SetFocus(hedit3);
+    UINT len = strlen(keys);
+    for (UINT i = 0; i < len; i++)
+    {
+        ::SendMessage(hedit3, WM_CHAR, keys[i], 0);
+    }
+}
+
 void StopAndSave()
 {
   //按下F10
-  keybd_event(VK_F10,0,0,0);
-  HWND hWnd = FindWindowAndSleep(m_strTitle2);
-  //点击另存为按钮
-  ::PostMessage(hWnd, WM_COMMAND, 0x3F4, 0x5A0496);
-  //TODO:setfocus
-  keybd_event('1',0,0,0);
-  keybd_event('.',0,0,0);
-  keybd_event('e',0,0,0);
-  keybd_event('x',0,0,0);
-  keybd_event('e',0,0,0);
-
-  HWND hWnd1 = FindWindowAndSleep("另存为");
-  ::PostMessage(hWnd1, WM_COMMAND, 0x1, 0x2F0112);
+  keybd_event(VK_F10, 0, 0, 0);
+  keybd_event(VK_F10, 0, KEYEVENTF_KEYUP, 0);
   Sleep(SLEEPTIME);
-  hWnd = FindWindowAndSleep(m_strTitle2);
+  HWND hWnd = FindWindowAndSleep(m_strTitle2);
+  SaveFile(hWnd, SAVEFILE);
+  Sleep(SLEEPTIME);
   //点击完成
   ::PostMessage(hWnd, WM_COMMAND, 0x1,0x7103C2);
 }
