@@ -6,20 +6,19 @@
 --------------------Configuration: KongZhi - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSPCAB5.tmp" with contents
+Creating temporary file "C:\Users\ADMINI~1\AppData\Local\Temp\RSP82E.tmp" with contents
 [
-/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Debug/KongZhi.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"C:\Users\Administrator\Desktop\Èí¼þ&³ÌÐò\KongZhi\KongZhi.cpp"
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/KongZhi.pdb" /debug /machine:I386 /out:"Debug/KongZhi.exe" /pdbtype:sept 
+.\Debug\KongZhi.obj
 ]
-Creating command line "cl.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSPCAB5.tmp" 
+Creating command line "link.exe @C:\Users\ADMINI~1\AppData\Local\Temp\RSP82E.tmp"
 <h3>Output Window</h3>
-Compiling...
-KongZhi.cpp
+Linking...
 
 
 
 <h3>Results</h3>
-KongZhi.obj - 0 error(s), 0 warning(s)
+KongZhi.exe - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>
