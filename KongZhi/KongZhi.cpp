@@ -1,20 +1,18 @@
-/*现在这个只是个初步的测试程序，我用程序生成一个窗口，在窗口中点一下鼠标左键，程序就启动录制软件完成录制。
-中间有两个Sleep不是明白具体怎么回事。
-下来还要完成的：
-1.给录制软件发送一个F10按键消息，让录制软件停止录制，然后把录制文件保存，保存的时候以录制完成时的系统时间为名字。
-2.让这个软件可以开机自动运行，然后做一个登陆框，不登陆就不能对电脑进行操作。现在没想好到底是登陆后就开始录制还是等特定软件运行后
-  再录制。
-现在大概的思路都有了，狗帅，你看看这样写行不行，我MFC还是看的不太明白，用MFC是不是还能简单些。*/
+/*TODO
+1.把录制文件保存
+2.开机自动运行，然后做一个登陆框，不登陆就不能对电脑进行操作。
+*/
 
 #include <windows.h>
 #include <stdio.h>
 
 #define SLEEPTIME 10
+#define SAVEFILE "C:\\1.exe"
+
 LPCTSTR m_strTitle1="Screen2Exe v1.2";//第一个窗口的标题
 LPCTSTR m_strTitle2="Screen2Exe";//第二个窗口的标题
 LPCTSTR m_strTitle3="Screen2Exe";//第三个窗口的标题
-
-BOOL m_bRecording = FALSE;
+BOOL m_bRecording = FALSE;    //是否已经开始录制
 
 LRESULT CALLBACK WinKongZhiProc(
   HWND hwnd,      // handle to window
@@ -30,6 +28,10 @@ int WINAPI WinMain(
   int nCmdShow              // show state
 )
 {
+    //TODO:删除这个窗口，让程序以一个无任何界面的方式运行
+    //在配置文件中配置要监控的程序，如果发现该程序已经运行
+    //则启动录制程序，然后监听该程序，如果发现该程序已经关闭，则停止录制
+    //并把数据插入到远程DB
     WNDCLASS wndcls;
     wndcls.cbClsExtra=0;
     wndcls.cbWndExtra=0;
@@ -59,40 +61,35 @@ int WINAPI WinMain(
     return 0;
 }
 
+HWND FindWindowAndSleep(LPCTSTR title) {
+  HWND hwnd = NULL;
+  while (hwnd == NULL) {
+      hwnd = ::FindWindow(NULL,title);
+      Sleep(SLEEPTIME);
+  }
+  return hwnd;
+}
+
 void StopAndSave()
 {
-	//按下F10
-	keybd_event(VK_F10,0,0,0);
-	HWND hWnd = NULL;
-    while(hWnd == NULL) {
-       hWnd = ::FindWindow(NULL,m_strTitle2);
-       Sleep(SLEEPTIME);
-    }
+  //按下F10
+  keybd_event(VK_F10,0,0,0);
+  HWND hWnd = FindWindowAndSleep(m_strTitle2);
+  //点击另存为按钮
+  ::PostMessage(hWnd, WM_COMMAND, 0x3F4, 0x5A0496);
+  //TODO:setfocus
+  keybd_event('1',0,0,0);
+  keybd_event('.',0,0,0);
+  keybd_event('e',0,0,0);
+  keybd_event('x',0,0,0);
+  keybd_event('e',0,0,0);
 
-    //点击另存为按钮
-	::PostMessage(hWnd, WM_COMMAND, 0x3F4, 0x5A0496);
-
-
-	keybd_event('1',0,0,0);
-	keybd_event('.',0,0,0);
-	keybd_event('e',0,0,0);
-	keybd_event('x',0,0,0);
-	keybd_event('e',0,0,0);
-
-	HWND hWnd1 = NULL;
-    while(hWnd1 == NULL) {
-       hWnd1 = ::FindWindow(NULL,"另存为");
-       Sleep(SLEEPTIME);
-    }
-	::PostMessage(hWnd1, WM_COMMAND, 0x1, 0x2F0112);
-	Sleep(SLEEPTIME);
-	hWnd = NULL;
-	while(hWnd == NULL) {
-       hWnd = ::FindWindow(NULL,m_strTitle2);
-       Sleep(SLEEPTIME);
-    }
-    //点击完成
-    ::PostMessage(hWnd, WM_COMMAND, 0x1,0x7103C2);
+  HWND hWnd1 = FindWindowAndSleep("另存为");
+  ::PostMessage(hWnd1, WM_COMMAND, 0x1, 0x2F0112);
+  Sleep(SLEEPTIME);
+  hWnd = FindWindowAndSleep(m_strTitle2);
+  //点击完成
+  ::PostMessage(hWnd, WM_COMMAND, 0x1,0x7103C2);
 }
 
 int StartRecord(HWND hwnd)
@@ -102,7 +99,7 @@ int StartRecord(HWND hwnd)
     TextOut(hdc,0,0,"调用录制软件开始录制",strlen("调用录制软件开始录制"));
     ReleaseDC(hwnd,hdc);
 
-    HINSTANCE hRet=0;
+    HINSTANCE hRet = 0;
     hRet = ShellExecute(NULL, "open", "..\\Screen2Exe\\Screen2Exe.exe",NULL, NULL, SW_SHOW);
     if((int)hRet <= 32)
     {
@@ -111,31 +108,25 @@ int StartRecord(HWND hwnd)
       return 0;
     }
 
-
-	HWND hWnd1 = NULL;
-	//如果没有找到窗口就一直循环,保证消息能够发送成功
-	while (hWnd1 == NULL) {
-		hWnd1 = ::FindWindow(NULL,m_strTitle1);//获取第一个窗口的句柄
-		Sleep(SLEEPTIME);
-	}
-    ::PostMessage( hWnd1 , WM_COMMAND , 0x1 , 0x38068A);//给第一个窗口发消息，模拟点击NEXT按钮
-
-    HWND hWnd2 = NULL;
-    while(hWnd2 == NULL) {
-       hWnd2 = ::FindWindow(NULL,m_strTitle2);//获取第二个窗口的句柄
-       Sleep(SLEEPTIME);
-    }
-
+    HWND hWnd1 = FindWindowAndSleep(m_strTitle1);
+    //点击next
+    ::PostMessage( hWnd1 , WM_COMMAND , 0x1 , 0x38068A);
+    HWND hWnd2 = FindWindowAndSleep(m_strTitle2);
+    //选择good
     ::PostMessage( hWnd2 , WM_COMMAND , 0x3EB, 0xA043E);
-    Sleep(10);//给第二个窗口发消息，模拟选择了GOOD录制
+    Sleep(SLEEPTIME);
+    //点击next
     ::PostMessage( hWnd2 , WM_COMMAND , 0x1 , 0xB04E2);
-    Sleep(10);//给第二个窗口发消息，模拟点击NEXT按钮
+    Sleep(SLEEPTIME);
     HWND hWnd3 = NULL;
+    //这里必须判断是否和hwnd2相等，因为两个窗口的标题是一样的
     while(hWnd3 == NULL || hWnd3 == hWnd2) {
         hWnd3 = ::FindWindow(NULL,m_strTitle3);//获取第一个窗口的句柄
+        Sleep(SLEEPTIME);
     }
-
-    ::PostMessage( hWnd3 , WM_COMMAND , 0x1 , 0x1B05F0);Sleep(10);//给第三个窗口发消息，模拟点击开始录制按钮
+    //开始录制
+    ::PostMessage( hWnd3 , WM_COMMAND , 0x1 , 0x1B05F0);
+    Sleep(SLEEPTIME);
     return 1;
 }
 
@@ -151,14 +142,14 @@ LRESULT CALLBACK WinKongZhiProc(
   case WM_LBUTTONDOWN:
     {
       if (!m_bRecording)
-	  {
+      {
         StartRecord(hwnd);
         m_bRecording = TRUE;
       }
-	  else
-	  {
+      else
+      {
         StopAndSave();
-		PostQuitMessage(0);
+        PostQuitMessage(0);
       }
       break;
     }
