@@ -1,17 +1,16 @@
 /*TODO
-1.¿ª»ú×Ô¶¯ÔËÐÐ£¬È»ºó×öÒ»¸öµÇÂ½¿ò£¬²»µÇÂ½¾Í²»ÄÜ¶ÔµçÄÔ½øÐÐ²Ù×÷¡£
+1.ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Ð£ï¿½È»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Â½ï¿½ò£¬²ï¿½ï¿½ï¿½Â½ï¿½Í²ï¿½ï¿½Ü¶Ôµï¿½ï¿½Ô½ï¿½ï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½
 */
-
 #include <windows.h>
 #include <stdio.h>
 
-#define SLEEPTIME 10   //Ã¿´ÎË¯ÃßµÄÊ±¼ä
-#define SAVEFILE "a.exe"  //±£´æµÄÎÄ¼þÃû,Ä¬ÈÏ±£´æµ½µ±Ç°Â·¾¶ÏÂ,ÎÄ¼þÃû¿ÉÒÔ¹Ì¶¨£¬±£´æºóÔÚ½øÐÐ¸ÄÃû
+#define SLEEPTIME 10   //Ã¿ï¿½ï¿½Ë¯ï¿½ßµï¿½Ê±ï¿½ï¿½
+#define SAVEFILE "a.exe"  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½,Ä¬ï¿½Ï±ï¿½ï¿½æµ½ï¿½ï¿½Ç°Â·ï¿½ï¿½ï¿½ï¿½,ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¹Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½
 
-LPCTSTR m_strTitle1="Screen2Exe v1.2";//µÚÒ»¸ö´°¿ÚµÄ±êÌâ
-LPCTSTR m_strTitle2="Screen2Exe";//µÚ¶þ¸ö´°¿ÚµÄ±êÌâ
-LPCTSTR m_strTitle3="Screen2Exe";//µÚÈý¸ö´°¿ÚµÄ±êÌâ
-BOOL m_bRecording = FALSE;    //ÊÇ·ñÒÑ¾­¿ªÊ¼Â¼ÖÆ
+LPCTSTR m_strTitle1="Screen2Exe v1.2";//ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ±ï¿½ï¿½ï¿½
+LPCTSTR m_strTitle2="Screen2Exe";//ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ±ï¿½ï¿½ï¿½
+LPCTSTR m_strTitle3="Screen2Exe";//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ±ï¿½ï¿½ï¿½
+BOOL m_bRecording = FALSE;    //ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Ê¼Â¼ï¿½ï¿½
 
 LRESULT CALLBACK WinKongZhiProc(
   HWND hwnd,      // handle to window
@@ -27,10 +26,10 @@ int WINAPI WinMain(
   int nCmdShow              // show state
 )
 {
-    //TODO:É¾³ýÕâ¸ö´°¿Ú£¬ÈÃ³ÌÐòÒÔÒ»¸öÎÞÈÎºÎ½çÃæµÄ·½Ê½ÔËÐÐ
-    //ÔÚÅäÖÃÎÄ¼þÖÐÅäÖÃÒª¼à¿ØµÄ³ÌÐò£¬Èç¹û·¢ÏÖ¸Ã³ÌÐòÒÑ¾­ÔËÐÐ
-    //ÔòÆô¶¯Â¼ÖÆ³ÌÐò£¬È»ºó¼àÌý¸Ã³ÌÐò£¬Èç¹û·¢ÏÖ¸Ã³ÌÐòÒÑ¾­¹Ø±Õ£¬ÔòÍ£Ö¹Â¼ÖÆ
-    //²¢°ÑÊý¾Ý²åÈëµ½Ô¶³ÌDB
+    //TODO:É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ÎºÎ½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ØµÄ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸Ã³ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸Ã³ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½Ø±Õ£ï¿½ï¿½ï¿½Ö¹Í£Â¼ï¿½ï¿½
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ëµ½Ô¶ï¿½ï¿½DB
     WNDCLASS wndcls;
     wndcls.cbClsExtra=0;
     wndcls.cbWndExtra=0;
@@ -45,7 +44,7 @@ int WINAPI WinMain(
     RegisterClass(&wndcls);
 
     HWND hwnd;
-    hwnd=CreateWindow("ceshi","²âÊÔ³ÌÐò",WS_OVERLAPPEDWINDOW,
+    hwnd=CreateWindow("ceshi","ï¿½ï¿½ï¿½Ô³ï¿½ï¿½ï¿½",WS_OVERLAPPEDWINDOW,
       0,0,600,400,NULL,NULL,hInstance,NULL);
 
     ShowWindow(hwnd,SW_SHOWNORMAL);
@@ -72,7 +71,7 @@ HWND FindWindowAndSleep(LPCTSTR title) {
 void SaveFile(HWND hwnd, LPCSTR keys)
 {
     AttachThreadInput(::GetCurrentThreadId(),
-        ::GetWindowThreadProcessId(hwnd,NULL),  //×Ô¼ºµÄÏß³ÌID
+        ::GetWindowThreadProcessId(hwnd,NULL),  //ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ß³ï¿½ID
         TRUE);
     HWND hedit1 = FindWindowEx(hwnd, NULL, "Edit", NULL);
     HWND hedit2 = FindWindowEx(hwnd, hedit1, "Edit", NULL);
@@ -87,14 +86,14 @@ void SaveFile(HWND hwnd, LPCSTR keys)
 
 void StopAndSave()
 {
-  //°´ÏÂF10
+  //ï¿½ï¿½ï¿½ï¿½F10
   keybd_event(VK_F10, 0, 0, 0);
   keybd_event(VK_F10, 0, KEYEVENTF_KEYUP, 0);
   Sleep(SLEEPTIME);
   HWND hWnd = FindWindowAndSleep(m_strTitle2);
   SaveFile(hWnd, SAVEFILE);
   Sleep(SLEEPTIME);
-  //µã»÷Íê³É
+  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   ::PostMessage(hWnd, WM_COMMAND, 0x1,0x7103C2);
 }
 
@@ -102,35 +101,35 @@ int StartRecord(HWND hwnd)
 {
     HDC hdc;
     hdc = GetDC(hwnd);
-    TextOut(hdc,0,0,"µ÷ÓÃÂ¼ÖÆÈí¼þ¿ªÊ¼Â¼ÖÆ",strlen("µ÷ÓÃÂ¼ÖÆÈí¼þ¿ªÊ¼Â¼ÖÆ"));
+    TextOut(hdc,0,0,"ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Â¼ï¿½ï¿½",strlen("ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Â¼ï¿½ï¿½"));
     ReleaseDC(hwnd,hdc);
 
     HINSTANCE hRet = 0;
     hRet = ShellExecute(NULL, "open", "..\\Screen2Exe\\Screen2Exe.exe",NULL, NULL, SW_SHOW);
     if((int)hRet <= 32)
     {
-      MessageBox(NULL,"´ò¿ª³ÌÐòÊ§°Ü",NULL,MB_OK);
+      MessageBox(NULL,"ï¿½ò¿ª³ï¿½ï¿½ï¿½Ê§ï¿½ï¿½",NULL,MB_OK);
       PostQuitMessage(0);
       return 0;
     }
 
     HWND hWnd1 = FindWindowAndSleep(m_strTitle1);
-    //µã»÷next
+    //ï¿½ï¿½ï¿½ï¿½next
     ::PostMessage( hWnd1 , WM_COMMAND , 0x1 , 0x38068A);
     HWND hWnd2 = FindWindowAndSleep(m_strTitle2);
-    //Ñ¡Ôñgood
+    //Ñ¡ï¿½ï¿½good
     ::PostMessage( hWnd2 , WM_COMMAND , 0x3EB, 0xA043E);
     Sleep(SLEEPTIME);
-    //µã»÷next
+    //ï¿½ï¿½ï¿½ï¿½next
     ::PostMessage( hWnd2 , WM_COMMAND , 0x1 , 0xB04E2);
     Sleep(SLEEPTIME);
     HWND hWnd3 = NULL;
-    //ÕâÀï±ØÐëÅÐ¶ÏÊÇ·ñºÍhwnd2ÏàµÈ£¬ÒòÎªÁ½¸ö´°¿ÚµÄ±êÌâÊÇÒ»ÑùµÄ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½hwnd2ï¿½ï¿½ï¿½È£ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
     while(hWnd3 == NULL || hWnd3 == hWnd2) {
-        hWnd3 = ::FindWindow(NULL,m_strTitle3);//»ñÈ¡µÚÒ»¸ö´°¿ÚµÄ¾ä±ú
+        hWnd3 = ::FindWindow(NULL,m_strTitle3);//ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ¾ï¿½ï¿½ï¿½
         Sleep(SLEEPTIME);
     }
-    //¿ªÊ¼Â¼ÖÆ
+    //ï¿½ï¿½Ê¼Â¼ï¿½ï¿½
     ::PostMessage( hWnd3 , WM_COMMAND , 0x1 , 0x1B05F0);
     Sleep(SLEEPTIME);
     return 1;
@@ -160,7 +159,7 @@ LRESULT CALLBACK WinKongZhiProc(
       break;
     }
   case WM_CLOSE:
-    if(IDYES==MessageBox(hwnd,"ÊÇ·ñÕæµÄ½áÊø£¿",NULL,MB_YESNO))
+    if(IDYES==MessageBox(hwnd,"ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½",NULL,MB_YESNO))
     {
       DestroyWindow(hwnd);
     }
