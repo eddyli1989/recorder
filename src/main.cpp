@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <stdio.h>
 
+#define RECORDER_PATH "..\\deps\\Screen2Exe\\Screen2Exe.exe"	//录制程序的相对路径
 #define SLEEPTIME 10   //每次睡眠的时间
 #define SAVEFILE "a.exe"  //保存的文件名,默认保存到当前路径下,文件名可以固定，保存后在进行改名
 
@@ -106,7 +107,7 @@ int StartRecord(HWND hwnd)
     ReleaseDC(hwnd,hdc);
 
     HINSTANCE hRet = 0;
-    hRet = ShellExecute(NULL, "open", "..\\Screen2Exe\\Screen2Exe.exe",NULL, NULL, SW_SHOW);
+    hRet = ShellExecute(NULL, "open", RECORDER_PATH, NULL, NULL, SW_SHOW);
     if((int)hRet <= 32)
     {
       MessageBox(NULL,"打开程序失败",NULL,MB_OK);

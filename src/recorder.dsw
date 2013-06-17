@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "KongZhi"=.\KongZhi.dsp - Package Owner=<4>
+Project: "recorder"=.\recorder.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
