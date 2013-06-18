@@ -6,6 +6,7 @@
 class COperates
 {
 public:
+	
 
 	COperates();
 
@@ -19,5 +20,6 @@ public:
 
 	void static AddAutoRun(LPSTR Pro);//将特定路径下的.exe程序设为开机自动启动，Pro值如："D:\\TEST.exe"
 
+	static void OpenRecorderControl();//打开录制控制程序
 };
 #endif
