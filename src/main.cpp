@@ -2,13 +2,17 @@
 1.开机自动运行，然后做一个登陆框，不登陆就不能对电脑进行操作。
 */
 
+#define   _WIN32_WINNT   0x0500
 #include <windows.h>
 #include <stdio.h>
 
+#define VC_EXTRALEAN 
+
 #define RECORDER_PATH "..\\deps\\Screen2Exe\\Screen2Exe.exe"	//录制程序的相对路径
 #define SLEEPTIME 10   //每次睡眠的时间
-#define SAVEFILE "a.exe"  //保存的文件名,默认保存到当前路径下,文件名可以固定，保存后在进行改名
+#define SAVEFILE "Recoder.exe"  //保存的文件名,默认保存到当前路径下,文件名可以固定，保存后在进行改名
 
+HHOOK LowLevelKeyboardHook=NULL;
 LPCTSTR m_strTitle1="Screen2Exe v1.2";//第一个窗口的标题
 LPCTSTR m_strTitle2="Screen2Exe";//第二个窗口的标题
 LPCTSTR m_strTitle3="Screen2Exe";//第三个窗口的标题
@@ -20,6 +24,13 @@ LRESULT CALLBACK WinKongZhiProc(
   WPARAM wParam,  // first message parameter
   LPARAM lParam   // second message parameter
 );
+
+LRESULT CALLBACK LowLevelKeyboardProc(
+  int nCode,     // hook code
+  WPARAM wParam, // message identifier
+  LPARAM lParam  // message data
+);
+
 
 int WINAPI WinMain(
   HINSTANCE hInstance,      // handle to current instance
@@ -51,6 +62,8 @@ int WINAPI WinMain(
 
     ShowWindow(hwnd,SW_SHOWNORMAL);
     UpdateWindow(hwnd);
+	
+	LowLevelKeyboardHook=SetWindowsHookEx(WH_KEYBOARD_LL,LowLevelKeyboardProc,GetModuleHandle(NULL),0);
 
     MSG msg;
     while(GetMessage(&msg,NULL,0,0))
@@ -155,11 +168,15 @@ LRESULT CALLBACK WinKongZhiProc(
       }
       else
       {
+		UnhookWindowsHookEx(LowLevelKeyboardHook);
         StopAndSave();
         PostQuitMessage(0);
       }
       break;
     }
+  case WM_SYSKEYDOWN:
+		MessageBox(hwnd,"没有屏蔽F10",NULL,MB_YESNO);
+	  break;
   case WM_CLOSE:
     if(IDYES==MessageBox(hwnd,"是否真的结束？",NULL,MB_YESNO))
     {
@@ -173,4 +190,27 @@ LRESULT CALLBACK WinKongZhiProc(
     return DefWindowProc(hwnd,uMsg,wParam,lParam);
   }
   return 0;
+}
+
+LRESULT CALLBACK LowLevelKeyboardProc(
+  int nCode,     // hook code
+  WPARAM wParam, // message identifier
+  LPARAM lParam  // message data
+)
+{
+	if (nCode<0 ) return CallNextHookEx(LowLevelKeyboardHook,nCode,wParam,lParam);
+ 
+	if (wParam==WM_KEYDOWN)
+	{
+		int KeyCode=((KBDLLHOOKSTRUCT*)lParam)->vkCode;
+		
+
+		if ( KeyCode == 121  )
+		{
+			
+			return 1;
+		}
+	}
+
+	return CallNextHookEx(LowLevelKeyboardHook,nCode,wParam,lParam); //传递钩子信息  
 }
