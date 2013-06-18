@@ -6,16 +6,16 @@
 --------------------Configuration: EDITtest - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP26F.tmp" with contents
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP5AE.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/EDITtest.pdb" /debug /machine:I386 /out:"Debug/EDITtest.exe" /pdbtype:sept 
+".\Debug\COperates.obj"
 ".\Debug\EDITtest.obj"
 ".\Debug\EDITtestDlg.obj"
 ".\Debug\StdAfx.obj"
 ".\Debug\EDITtest.res"
-".\Debug\COperates.obj"
 ]
-Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP26F.tmp"
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP5AE.tmp"
 <h3>Output Window</h3>
 Linking...
 

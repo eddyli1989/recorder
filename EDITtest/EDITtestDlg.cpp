@@ -15,7 +15,6 @@ static char THIS_FILE[] = __FILE__;
 
 char Name[10]={0};			//存放登陆用户名
 char PassWord[10]={0};		//存放登陆用户密码
-char NoteFile[30]={0};		//存放程序生成的INI文件路径和文件名
 
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
@@ -256,10 +255,8 @@ void CEDITtestDlg::OnOK()
 		//创建以日期为名的ini文件，记录登录人员信息和录制过程中的信息
 		SYSTEMTIME st;
 		GetLocalTime(&st);//获取系统当前时间
-		char Time[30]={0};		
-		char Path[10]="D:\\";
-		char temp[5]=".ini";
-		sprintf(NoteFile,"%s%d_%d_%d%s",Path,st.wYear,st.wMonth,st.wDay,temp);//格式化系统日期作为.ini文件名 
+		char Time[20]="0";		
+		LPSTR NoteFile="D:\\NoteFile.ini"; 
 		sprintf(Time,"%d:%d",st.wHour,st.wMinute);//格式化系统时间作为段名 
 		::WritePrivateProfileString(Time,"登录人员",Name,NoteFile);
 	
