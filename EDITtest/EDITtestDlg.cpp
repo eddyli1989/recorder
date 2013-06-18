@@ -15,7 +15,7 @@ static char THIS_FILE[] = __FILE__;
 
 char Name[10]={0};			//存放登陆用户名
 char PassWord[10]={0};		//存放登陆用户密码
-
+HHOOK LowLevelKeyboardHook=NULL;//钩子句柄，用来屏蔽WIN键
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
 
@@ -41,6 +41,12 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
+
+LRESULT CALLBACK LowLevelKeyboardProc(//低级钩子回调函数声明
+  int nCode,     // hook code
+  WPARAM wParam, // message identifier
+  LPARAM lParam  // message data
+);
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {
@@ -100,6 +106,9 @@ BOOL CEDITtestDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// Add "About..." menu item to system menu.
+	//安装低级钩子
+	LowLevelKeyboardHook=SetWindowsHookEx(WH_KEYBOARD_LL,
+		LowLevelKeyboardProc,GetModuleHandle(NULL),0);
 
 	//屏蔽桌面消息和开始按钮消息
 	COperates::DisableDesktop();
@@ -245,12 +254,17 @@ void CEDITtestDlg::OnOK()
 	}
 	else
 	{
+		//卸载低级钩子
+		UnhookWindowsHookEx(LowLevelKeyboardHook);
 
 		//允许使用桌面和开始菜单
 		COperates::EnableDesktop();
 
 		//允许任务管理器
-		COperates::EnableTaskMgr();
+		COperates::EnableTaskMgr();//暂时设置在此就允许任务管理器，以后等录制结束再允许
+		
+		//打开录制控制程序
+		COperates::OpenRecorderControl();
 
 		//创建以日期为名的ini文件，记录登录人员信息和录制过程中的信息
 		SYSTEMTIME st;
@@ -262,4 +276,18 @@ void CEDITtestDlg::OnOK()
 	
 		CDialog::OnOK();
 	}
+}
+
+//低级钩子回调函数屏蔽WIN键
+LRESULT CALLBACK LowLevelKeyboardProc(int nCode,WPARAM wParam, LPARAM lParam)
+{ 
+	if (nCode<0 ) return CallNextHookEx(LowLevelKeyboardHook,nCode,wParam,lParam);
+ 
+	if (wParam==WM_KEYDOWN)
+	{
+		int KeyCode=((KBDLLHOOKSTRUCT*)lParam)->vkCode;
+		if (KeyCode==91)
+			return 1;
+	}
+	return CallNextHookEx(LowLevelKeyboardHook,nCode,wParam,lParam); //传递钩子信息
 }

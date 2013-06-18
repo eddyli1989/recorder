@@ -1,6 +1,6 @@
 // EDITtest.cpp : Defines the class behaviors for the application.
 //
-
+#define   _WIN32_WINNT   0x0500 
 #include "stdafx.h"
 #include "EDITtest.h"
 #include "EDITtestDlg.h"
