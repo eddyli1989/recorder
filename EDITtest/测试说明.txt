@@ -1,9 +1,0 @@
-测试时要在D盘下建个test.ini文件，格式为
-[chinagfa]
-password=123456
-[lishuai]
-password=654321
-....
-
-
-要实现开机自动启动需要将工程编译生成的.exe文件放在D盘。
