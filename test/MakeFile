@@ -1,0 +1,15 @@
+all:ProcessController.obj testProcessController.obj
+	link.exe ProcessController.obj testProcessController.obj /out:test.exe
+
+ProcessController.obj:../src/recorder/ProcessController.cpp
+	cl.exe ../src/recorder/ProcessController.cpp
+
+testProcessController.obj:testProcessController.cpp
+	cl.exe testProcessController.cpp
+
+clean:
+	del *.obj *.exe
+
+
+
+
