@@ -1,6 +1,3 @@
-/*TODO
-1.开机自动运行，然后做一个登陆框，不登陆就不能对电脑进行操作。
-*/
 
 #define   _WIN32_WINNT   0x0500
 #include <windows.h>
@@ -10,7 +7,7 @@
 
 #define RECORDER_PATH "..\\deps\\Screen2Exe\\Screen2Exe.exe"	//录制程序的相对路径
 #define SLEEPTIME 10   //每次睡眠的时间
-#define SAVEFILE "Recoder.exe"  //保存的文件名,默认保存到当前路径下,文件名可以固定，保存后在进行改名
+#define SAVEFILE "Recoder.exe"  //保存的文件名,默认保存到当前路径下
 
 HHOOK LowLevelKeyboardHook=NULL;
 LPCTSTR m_strTitle1="Screen2Exe v1.2";//第一个窗口的标题

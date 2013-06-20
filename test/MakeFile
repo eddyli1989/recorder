@@ -1,11 +1,14 @@
-all:ProcessController.obj testProcessController.obj
-	link.exe ProcessController.obj testProcessController.obj /out:test.exe
+all:log.obj ProcessController.obj testProcessController.obj
+	link.exe log.obj ProcessController.obj testProcessController.obj /out:test.exe
+
+log.obj:../src/log.cpp
+	cl.exe -c ../src/log.cpp
 
 ProcessController.obj:../src/recorder/ProcessController.cpp
-	cl.exe ../src/recorder/ProcessController.cpp
+	cl.exe -c ../src/recorder/ProcessController.cpp
 
 testProcessController.obj:testProcessController.cpp
-	cl.exe testProcessController.cpp
+	cl.exe -c testProcessController.cpp
 
 clean:
 	del *.obj *.exe
