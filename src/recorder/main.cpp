@@ -1,5 +1,6 @@
 #define   _WIN32_WINNT   0x0500
 #include<windows.h>
+#include<process.h>
 #include<stdio.h>
 #include<vector>
 #include<string>
@@ -9,7 +10,7 @@
 #include"ProcessController.h"
 using namespace std;
 
-#define VC_EXTRALEAN 
+#define VC_EXTRALEAN
 #define MAX_PROCESS_LENGTH 1024
 #define RECORDER_PATH "..\\deps\\Screen2Exe\\Screen2Exe.exe"    //录制程序的相对路径
 #define SLEEPTIME 10   //每次睡眠的时间
@@ -93,20 +94,17 @@ void StopAndSave() {
       Sleep(SLEEPTIME);
       //点击完成
       ::PostMessage(hWnd, WM_COMMAND, 0x1,0x7103C2);
-      log_info(_T("[StopAndSave]stop recording and saving done")); 
+      log_info(_T("[StopAndSave]stop recording and saving done"));
   } else {
       log_error(_T("Find Window Failed"));
   }
-  
+
 }
 
 HANDLE StartRecord(ProcessController& controller) {
-    LowLevelKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, 
-                LowLevelKeyboardProc,
-                GetModuleHandle(NULL),
-                0);
+
     log_info(_T("launch recorder to record"));
-    SHELLEXECUTEINFO ShellInfo;        
+    SHELLEXECUTEINFO ShellInfo;
     BOOL ret = controller.StartProcess(RECORDER_PATH, &ShellInfo);
     if (!ret) {
         log_error(_T("open recorder faied"));
@@ -141,21 +139,21 @@ HANDLE StartRecord(ProcessController& controller) {
 }
 
 
-int StartWatchProcess() {
+unsigned int __stdcall StartWatchProcess(void * arg) {
     log_info(_T("start watch process"));
     ProcessController controller;
     vector<string> list;
-    ReadProcessConfig(list); 
+    ReadProcessConfig(list);
     PROCESSENTRY32 entry;
     memset(&entry, 0 , sizeof(entry));
     while (TRUE) {
         if ( controller.FindProcessInList(list, &entry) ) {
             HANDLE processHandle = ::OpenProcess(SYNCHRONIZE, FALSE, entry.th32ProcessID);
             if (processHandle != NULL) {
-                StartRecord(controller); 
+                StartRecord(controller);
                 DWORD ret =  WaitForSingleObject(processHandle, INFINITE);
                 if (ret == WAIT_OBJECT_0) {
-                    StopAndSave(); 
+                    StopAndSave();
                 } else {
                     log_error(_T("wait error:%d"),::GetLastError());
                }
@@ -171,8 +169,49 @@ int WINAPI WinMain(
   HINSTANCE hPrevInstance,  // handle to previous instance
   LPSTR lpCmdLine,          // command line
   int nCmdShow              // show state
-) {
-   StartWatchProcess();
+)
+{
+	_beginthreadex(
+	   NULL,
+	   0,
+	   StartWatchProcess,
+	   NULL,
+	   0,
+	   NULL
+	);
+
+	WNDCLASS wndcls;
+    wndcls.cbClsExtra=0;
+    wndcls.cbWndExtra=0;
+    wndcls.hbrBackground=(HBRUSH)GetStockObject(WHITE_BRUSH);
+    wndcls.hCursor=LoadCursor(NULL,IDC_ARROW);
+    wndcls.hIcon=LoadIcon(NULL,IDI_INFORMATION);
+    wndcls.hInstance=hInstance;
+    wndcls.lpfnWndProc=WinKongZhiProc;
+    wndcls.lpszClassName="ceshi";
+    wndcls.lpszMenuName=NULL;
+    wndcls.style=CS_HREDRAW | CS_VREDRAW;
+    RegisterClass(&wndcls);
+
+    HWND hwnd;
+    hwnd=CreateWindow("ceshi","测试程序",WS_OVERLAPPEDWINDOW,
+      0,0,0,0,NULL,NULL,hInstance,NULL);
+
+    ShowWindow(hwnd,SW_SHOWNORMAL);
+    UpdateWindow(hwnd);
+
+	LowLevelKeyboardHook = SetWindowsHookEx(
+				WH_KEYBOARD_LL,
+                LowLevelKeyboardProc,
+                GetModuleHandle(NULL),
+                0);
+    MSG msg;
+    while(GetMessage(&msg,NULL,0,0))
+    {
+      TranslateMessage(&msg);
+      DispatchMessage(&msg);
+    }
+    return 0;
 }
 
 
@@ -183,12 +222,22 @@ LRESULT CALLBACK LowLevelKeyboardProc(
   LPARAM lParam  // message data
 )   {
         if (nCode<0 ) return CallNextHookEx(LowLevelKeyboardHook,nCode,wParam,lParam);
- 
+
         if (wParam==WM_KEYDOWN) {
                 int KeyCode=((KBDLLHOOKSTRUCT*)lParam)->vkCode;
                 if ( KeyCode == 121 ){
                     return 1;
                 }
         }
-        return CallNextHookEx(LowLevelKeyboardHook,nCode,wParam,lParam); //传递钩子信息  
+        return CallNextHookEx(LowLevelKeyboardHook,nCode,wParam,lParam); //传递钩子信息
+}
+
+LRESULT CALLBACK WinKongZhiProc(
+  HWND hwnd,      // handle to window
+  UINT uMsg,      // message identifier
+  WPARAM wParam,  // first message parameter
+  LPARAM lParam   // second message parameter
+)
+{
+  return 0;
 }
