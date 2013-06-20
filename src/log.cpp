@@ -97,7 +97,7 @@ ofstream* ready4log() {
     hour(_hour, MAX_PATH);
     _sntprintf(file, MAX_PATH-1, _T("%s/%s.log"), path, _hour);
 
-    static ofstream fh(file);
+    static ofstream fh(file,ofstream::app);
     static TCHAR preFile[MAX_PATH] = { 0 };
 
     if (_tcslen(preFile) == 0) {
