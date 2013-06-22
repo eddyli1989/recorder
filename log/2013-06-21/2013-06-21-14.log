@@ -1,0 +1,41 @@
+[INFO]2013-06-21 14:02:12:start watch process
+[INFO]2013-06-21 14:02:18:[FindProcess]process:QQ.exe has been found
+[INFO]2013-06-21 14:02:18:launch recorder to record
+[INFO]2013-06-21 14:03:02:[StopAndSave]stop recording and saving...
+[INFO]2013-06-21 14:03:02:[SaveFile]saving file...
+[INFO]2013-06-21 14:03:02:[SaveFile]saving file done
+[INFO]2013-06-21 14:03:02:[StopAndSave]stop recording and saving done
+[INFO]2013-06-21 14:03:11:[FindProcess]process:QQ.exe has been found
+[INFO]2013-06-21 14:03:11:launch recorder to record
+[INFO]2013-06-21 14:03:21:[StopAndSave]stop recording and saving...
+[INFO]2013-06-21 14:09:55:start watch process
+[INFO]2013-06-21 14:09:58:[FindProcess]process:QQ.exe has been found
+[INFO]2013-06-21 14:09:58:launch recorder to record
+[INFO]2013-06-21 14:10:14:[StopAndSave]stop recording and saving...
+[INFO]2013-06-21 14:10:14:[SaveFile]saving file...
+[INFO]2013-06-21 14:10:14:[SaveFile]saving file done
+[INFO]2013-06-21 14:10:14:[StopAndSave]stop recording and saving done
+[INFO]2013-06-21 14:32:30:start watch process
+[INFO]2013-06-21 14:32:36:[FindProcess]process:QQ.exe has been found
+[INFO]2013-06-21 14:32:36:launch recorder to record
+[INFO]2013-06-21 14:34:53:start watch process
+[INFO]2013-06-21 14:34:59:[FindProcess]process:QQ.exe has been found
+[INFO]2013-06-21 14:34:59:launch recorder to record
+[INFO]2013-06-21 14:36:00:[StopAndSave]stop recording and saving...
+[INFO]2013-06-21 14:36:00:[SaveFile]saving file...
+[INFO]2013-06-21 14:36:00:[SaveFile]saving file done
+[INFO]2013-06-21 14:36:00:[StopAndSave]stop recording and saving done
+[INFO]2013-06-21 14:51:12:start watch process
+[INFO]2013-06-21 14:54:05:start watch process
+[INFO]2013-06-21 14:54:11:[FindProcess]process:QQ.exe has been found
+[INFO]2013-06-21 14:54:11:launch recorder to record
+[INFO]2013-06-21 14:54:52:[StopAndSave]stop recording and saving...
+[ERROR]2013-06-21 14:55:03:Find Window Failed
+[INFO]2013-06-21 14:58:21:start watch process
+[INFO]2013-06-21 14:58:27:[FindProcess]process:QQ.exe has been found
+[INFO]2013-06-21 14:58:27:launch recorder to record
+[INFO]2013-06-21 14:58:53:[StopAndSave]stop recording and saving...
+[INFO]2013-06-21 14:58:53:[SaveFile]saving file...
+[INFO]2013-06-21 14:58:53:[SaveFile]saving file done
+[INFO]2013-06-21 14:58:53:[StopAndSave]stop recording and saving done
+close handle for:../log/2013-06-21/2013-06-21-14.log

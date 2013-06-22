@@ -14,6 +14,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+#define NoteFile_PATH "../config/NoteFile.ini"
+#define Login_PATH "../deps/Login.exe"
 char Name[10]={0};			//存放登陆用户名
 char PassWord[10]={0};		//存放登陆用户密码
 HHOOK LowLevelKeyboardHook=NULL;//钩子句柄，用来屏蔽WIN键
@@ -115,7 +117,7 @@ BOOL CLoginDlg::OnInitDialog()
 	COperates::DisableDesktop();
 
 	//添加程序开机自动启动
-	COperates::AddAutoRun("D:\\EDITtest.exe");
+	COperates::AddAutoRun(Login_PATH);
 
 	//禁止任务管理器
 	COperates::DisableTaskMgr();
@@ -271,9 +273,8 @@ void CLoginDlg::OnOK()
 		SYSTEMTIME st;
 		GetLocalTime(&st);//获取系统当前时间
 		char Time[20]="0";		
-		LPSTR NoteFile="D:\\NoteFile.ini"; 
 		sprintf(Time,"%d:%d",st.wHour,st.wMinute);//格式化系统时间作为段名 
-		::WritePrivateProfileString(Time,"登录人员",Name,NoteFile);
+		::WritePrivateProfileString(Time,"登录人员",Name,NoteFile_PATH);
 	
 		CDialog::OnOK();
 	}

@@ -11,7 +11,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-#define RECORDER_CONTROL_PATH "..\\bin\\recorder.exe"	//录制控制程序的相对路径
+#define RECORDER_CONTROL_PATH "../deps/recorder.exe"	//录制控制程序的相对路径
 
 COperates::COperates()
 {
@@ -64,7 +64,7 @@ void  COperates::AddAutoRun(LPSTR Pro)
 //	LPSTR Pro="D:\\EDITtest.exe";
 	HKEY hkResult;
 	int ret=RegOpenKey(HKEY_LOCAL_MACHINE,regname,&hkResult);
-	ret=RegSetValueEx(hkResult,"EDITtest"/* 注册表键名*/,0,REG_EXPAND_SZ,(unsigned char *)Pro,20);
+	ret=RegSetValueEx(hkResult,"Login"/* 注册表键名*/,0,REG_EXPAND_SZ,(unsigned char *)Pro,50);
 	RegCloseKey(hkResult);
 }
 

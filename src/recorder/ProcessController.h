@@ -9,6 +9,8 @@
 #include<TlHelp32.h>
 #include<vector>
 #include<string>
+#include <commctrl.h>
+
 using namespace std;
 
 class ProcessController  {
@@ -16,4 +18,6 @@ class ProcessController  {
       BOOL FindProcess(const TCHAR * szExeFile, PROCESSENTRY32 *entry);
       BOOL FindProcessInList(vector<string> &list, PROCESSENTRY32 *entry);
       BOOL StartProcess(TCHAR * szFilePath, SHELLEXECUTEINFO* info);
+	  DWORD GetSpecifiedProcessId(const char *pszProcessName);
+	  int KillTargetIcon(DWORD TargetPID);
 };

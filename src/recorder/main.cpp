@@ -7,6 +7,7 @@
 #include<sstream>
 #include<tchar.h>
 #include"../log.h"
+#include"CNoteFile.h"
 #include"ProcessController.h"
 using namespace std;
 
@@ -14,22 +15,16 @@ using namespace std;
 #define MAX_PROCESS_LENGTH 1024
 #define RECORDER_PATH "..\\deps\\Screen2Exe\\Screen2Exe.exe"    //录制程序的相对路径
 #define SLEEPTIME 10   //每次睡眠的时间
-#define SAVEFILE "Recoder.exe"  //保存的文件名,默认保存到当前路径下
+#define SAVEFILE "../config/Recoder.exe"  //保存的文件名,默认保存到当前路径下
 #define PROCESSCONFIG "../config/process.ini"
 #define RETRY_TIMES 1000
+
 
 HHOOK LowLevelKeyboardHook = NULL;
 LPCTSTR m_strTitle1 = "Screen2Exe v1.2";//第一个窗口的标题
 LPCTSTR m_strTitle2 = "Screen2Exe";//第二个窗口的标题
 LPCTSTR m_strTitle3 = "Screen2Exe";//第三个窗口的标题
 BOOL m_bRecording = FALSE;    //是否已经开始录制
-
-LRESULT CALLBACK WinKongZhiProc(
-  HWND hwnd,      // handle to window
-  UINT uMsg,      // message identifier
-  WPARAM wParam,  // first message parameter
-  LPARAM lParam   // second message parameter
-);
 
 LRESULT CALLBACK LowLevelKeyboardProc(
   int nCode,     // hook code
@@ -77,33 +72,37 @@ void SaveFile(HWND hwnd, LPCSTR keys) {
     for (UINT i = 0; i < len; i++) {
         ::SendMessage(hedit3, WM_CHAR, keys[i], 0);
     }
+	CNoteFile::WriteOperationToNote("结束录制");
+	CNoteFile::OpenEndNote();
     log_info(_T("[SaveFile]saving file done"));
 }
 
 
 void StopAndSave() {
-  //按下F10
-  log_info(_T("[StopAndSave]stop recording and saving..."));
-  UnhookWindowsHookEx(LowLevelKeyboardHook);
-  keybd_event(VK_F10, 0, 0, 0);
-  keybd_event(VK_F10, 0, KEYEVENTF_KEYUP, 0);
-  Sleep(SLEEPTIME);
-  HWND hWnd = FindWindowAndSleep(m_strTitle2);
-  if (hWnd != NULL) {
-      SaveFile(hWnd, SAVEFILE);
-      Sleep(SLEEPTIME);
-      //点击完成
-      ::PostMessage(hWnd, WM_COMMAND, 0x1,0x7103C2);
-      log_info(_T("[StopAndSave]stop recording and saving done"));
-  } else {
-      log_error(_T("Find Window Failed"));
-  }
-
+	//按下F10
+	log_info(_T("[StopAndSave]stop recording and saving..."));
+	UnhookWindowsHookEx(LowLevelKeyboardHook);
+	keybd_event(VK_F10, 0, 0, 0);
+	keybd_event(VK_F10, 0, KEYEVENTF_KEYUP, 0);
+	Sleep(SLEEPTIME);
+	HWND hWnd = FindWindowAndSleep(m_strTitle2);
+	if (hWnd != NULL) {
+		SaveFile(hWnd, SAVEFILE);
+		Sleep(SLEEPTIME);
+		//点击完成
+		::PostMessage(hWnd, WM_COMMAND, 0x1,0x7103C2);
+		
+		log_info(_T("[StopAndSave]stop recording and saving done"));
+	} else {
+		log_error(_T("Find Window Failed"));
+	}
 }
 
 HANDLE StartRecord(ProcessController& controller) {
 
     log_info(_T("launch recorder to record"));
+	CNoteFile::WriteOperationToNote("开始录制");
+	CNoteFile::OpenStartNote();
     SHELLEXECUTEINFO ShellInfo;
     BOOL ret = controller.StartProcess(RECORDER_PATH, &ShellInfo);
     if (!ret) {
@@ -139,72 +138,16 @@ HANDLE StartRecord(ProcessController& controller) {
 }
 
 
-unsigned int __stdcall StartWatchProcess(void * arg) {
-    log_info(_T("start watch process"));
-    ProcessController controller;
-    vector<string> list;
-    ReadProcessConfig(list);
-    PROCESSENTRY32 entry;
-    memset(&entry, 0 , sizeof(entry));
-    while (TRUE) {
-        if ( controller.FindProcessInList(list, &entry) ) {
-            HANDLE processHandle = ::OpenProcess(SYNCHRONIZE, FALSE, entry.th32ProcessID);
-            if (processHandle != NULL) {
-                StartRecord(controller);
-                DWORD ret =  WaitForSingleObject(processHandle, INFINITE);
-                if (ret == WAIT_OBJECT_0) {
-                    StopAndSave();
-                } else {
-                    log_error(_T("wait error:%d"),::GetLastError());
-               }
-            }
-        }
-        //每隔3秒扫描一次
-        Sleep(SLEEPTIME * 300);
-    }
-}
-
-int WINAPI WinMain(
-  HINSTANCE hInstance,      // handle to current instance
-  HINSTANCE hPrevInstance,  // handle to previous instance
-  LPSTR lpCmdLine,          // command line
-  int nCmdShow              // show state
-)
+unsigned int __stdcall Hook(void * arg)
 {
-	_beginthreadex(
-	   NULL,
-	   0,
-	   StartWatchProcess,
-	   NULL,
-	   0,
-	   NULL
-	);
 
-	WNDCLASS wndcls;
-    wndcls.cbClsExtra=0;
-    wndcls.cbWndExtra=0;
-    wndcls.hbrBackground=(HBRUSH)GetStockObject(WHITE_BRUSH);
-    wndcls.hCursor=LoadCursor(NULL,IDC_ARROW);
-    wndcls.hIcon=LoadIcon(NULL,IDI_INFORMATION);
-    wndcls.hInstance=hInstance;
-    wndcls.lpfnWndProc=WinKongZhiProc;
-    wndcls.lpszClassName="ceshi";
-    wndcls.lpszMenuName=NULL;
-    wndcls.style=CS_HREDRAW | CS_VREDRAW;
-    RegisterClass(&wndcls);
-
-    HWND hwnd;
-    hwnd=CreateWindow("ceshi","测试程序",WS_OVERLAPPEDWINDOW,
-      0,0,0,0,NULL,NULL,hInstance,NULL);
-
-    ShowWindow(hwnd,SW_SHOWNORMAL);
-    UpdateWindow(hwnd);
 
 	LowLevelKeyboardHook = SetWindowsHookEx(
-				WH_KEYBOARD_LL,
-                LowLevelKeyboardProc,
-                GetModuleHandle(NULL),
-                0);
+								WH_KEYBOARD_LL,
+								LowLevelKeyboardProc,
+								GetModuleHandle(NULL),
+								0);
+
     MSG msg;
     while(GetMessage(&msg,NULL,0,0))
     {
@@ -212,9 +155,50 @@ int WINAPI WinMain(
       DispatchMessage(&msg);
     }
     return 0;
+
+} 
+
+int WINAPI WinMain
+(
+HINSTANCE hInstance,
+HINSTANCE hPrevInstance,
+LPSTR lpCmdLine,
+int nCmdShow
+){
+    log_info(_T("start watch process"));
+    ProcessController controller;
+    vector<string> list;
+    ReadProcessConfig(list);
+    PROCESSENTRY32 entry;
+	DWORD PID=0;
+	BOOL RecorderFlag=false;
+    memset(&entry, 0 , sizeof(entry));
+    while (TRUE) {
+        if ( controller.FindProcessInList(list, &entry) ) {
+            HANDLE processHandle = ::OpenProcess(SYNCHRONIZE, FALSE, entry.th32ProcessID);
+            if ( (processHandle != NULL)&&(!RecorderFlag) ) {
+                StartRecord(controller);
+				RecorderFlag=true;
+				_beginthreadex(NULL,0,Hook,NULL,0,NULL);
+				do
+				{
+					PID=controller.GetSpecifiedProcessId("Screen2Exe.exe");
+				}while(!PID);
+				Sleep(1000);
+				controller.KillTargetIcon(PID);
+                DWORD ret =  WaitForSingleObject(processHandle, INFINITE);
+                if ( (ret == WAIT_OBJECT_0)&&(RecorderFlag) ) {
+                    StopAndSave();
+					RecorderFlag=false;
+                } else {
+                    log_error(_T("wait error:%d"),::GetLastError());
+               }
+            }
+        }
+        //每隔3秒扫描一次
+        Sleep(SLEEPTIME * 200);
+    }
 }
-
-
 
 LRESULT CALLBACK LowLevelKeyboardProc(
   int nCode,     // hook code
@@ -228,16 +212,10 @@ LRESULT CALLBACK LowLevelKeyboardProc(
                 if ( KeyCode == 121 ){
                     return 1;
                 }
+				if ( KeyCode == 123 ){
+					CNoteFile::OpenKeyNote();
+					return 1;
+				}
         }
         return CallNextHookEx(LowLevelKeyboardHook,nCode,wParam,lParam); //传递钩子信息
-}
-
-LRESULT CALLBACK WinKongZhiProc(
-  HWND hwnd,      // handle to window
-  UINT uMsg,      // message identifier
-  WPARAM wParam,  // first message parameter
-  LPARAM lParam   // second message parameter
-)
-{
-  return 0;
 }
