@@ -13,7 +13,7 @@ using namespace std;
 
 #define VC_EXTRALEAN
 #define MAX_PROCESS_LENGTH 1024
-#define RECORDER_PATH "..\\deps\\Screen2Exe\\Screen2Exe.exe"    //录制程序的相对路径
+#define RECORDER_PATH "../deps/Screen2Exe/Screen2Exe.exe"    //录制程序的相对路径
 #define SLEEPTIME 10   //每次睡眠的时间
 #define SAVEFILE "../config/Recoder.exe"  //保存的文件名,默认保存到当前路径下
 #define PROCESSCONFIG "../config/process.ini"
@@ -172,6 +172,7 @@ int nCmdShow
     PROCESSENTRY32 entry;
 	DWORD PID=0;
 	BOOL RecorderFlag=false;
+	HANDLE hThread;
     memset(&entry, 0 , sizeof(entry));
     while (TRUE) {
         if ( controller.FindProcessInList(list, &entry) ) {
@@ -179,20 +180,32 @@ int nCmdShow
             if ( (processHandle != NULL)&&(!RecorderFlag) ) {
                 StartRecord(controller);
 				RecorderFlag=true;
-				_beginthreadex(NULL,0,Hook,NULL,0,NULL);
+				hThread=(HANDLE)_beginthreadex(NULL,0,Hook,NULL,0,NULL);
+				int retry=0;
 				do
 				{
 					PID=controller.GetSpecifiedProcessId("Screen2Exe.exe");
-				}while(!PID);
+					retry+=1;
+				}while(!PID && retry < RETRY_TIMES);
 				Sleep(1000);
 				controller.KillTargetIcon(PID);
-                DWORD ret =  WaitForSingleObject(processHandle, INFINITE);
-                if ( (ret == WAIT_OBJECT_0)&&(RecorderFlag) ) {
-                    StopAndSave();
-					RecorderFlag=false;
-                } else {
-                    log_error(_T("wait error:%d"),::GetLastError());
-               }
+
+				while(RecorderFlag) {
+					DWORD ret =  WaitForSingleObject(processHandle, INFINITE);
+					if ( !controller.FindProcessInList(list, &entry) ) {
+						if ( (ret == WAIT_OBJECT_0)&&(RecorderFlag)) {
+							StopAndSave();
+							RecorderFlag=false;
+							CloseHandle(hThread);
+						} else {
+							log_error(_T("wait error:%d"),::GetLastError());
+						}
+					} else {
+						HANDLE processHandle = ::OpenProcess(SYNCHRONIZE, FALSE, entry.th32ProcessID);
+						DWORD ret =  WaitForSingleObject(processHandle, INFINITE);
+					}
+
+				}
             }
         }
         //每隔3秒扫描一次
